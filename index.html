@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>ALLYDRIVE v1.4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              slate: {
+                850: '#1e293b',
+                900: '#0f172a',
+                950: '#020617',
+              },
+              ally: {
+                primary: '#8b5cf6', // Soft Violet
+                secondary: '#2dd4bf', // Mint/Teal
+                surface: 'rgba(30, 41, 59, 0.7)', // Glass background
+                glass: 'rgba(255, 255, 255, 0.08)',
+                danger: '#fb7185', // Soft Rose
+                success: '#34d399', // Soft Emerald
+                warning: '#fbbf24'
+              }
+            },
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+            },
+            backdropBlur: {
+              xs: '2px',
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Performance Optimizations */
+      * {
+        touch-action: manipulation; /* Removes 300ms tap delay */
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Leaflet attribution styling */
+      .leaflet-control-attribution { 
+        background: rgba(0,0,0,0.4) !important;
+        color: rgba(255,255,255,0.7) !important;
+        border-radius: 4px;
+        padding: 0 4px !important;
+        font-size: 9px !important;
+        margin-right: 10px !important;
+        margin-bottom: 4px !important;
+      }
+      .leaflet-control-attribution a {
+        color: #aaa !important;
+        text-decoration: none;
+      }
+      
+      body {
+        background-color: #020617; /* Slate 950 */
+        color: white;
+        overflow: hidden;
+        font-family: 'Outfit', sans-serif;
+      }
+
+      /* Safe Area for Mobile Notches */
+      .pt-safe {
+        padding-top: env(safe-area-inset-top, 20px);
+      }
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 20px);
+      }
+      
+      /* Pulsing GPS Ring */
+      .gps-ring {
+        border: 3px solid #8b5cf6;
+        -webkit-border-radius: 30px;
+        height: 18px;
+        width: 18px;
+        -webkit-animation: pulsate 1.5s ease-out;
+        -webkit-animation-iteration-count: infinite; 
+        opacity: 0.0;
+        border-radius: 30px;
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        z-index: 1;
+      }
+      @keyframes pulsate {
+        0% {-webkit-transform: scale(0.1, 0.1); opacity: 0.0;}
+        50% {opacity: 0.5;}
+        100% {-webkit-transform: scale(1.5, 1.5); opacity: 0.0;}
+      }
+
+      /* Animations */
+      @keyframes floatUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .animate-float-up {
+        animation: floatUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        will-change: transform, opacity;
+      }
+      
+      .glass-panel {
+        background: rgba(15, 23, 42, 0.85); /* Higher opacity for better contrast */
+        backdrop-filter: blur(12px); /* Reduced blur for mobile performance */
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none; 
+        scrollbar-width: none; 
+      }
+
+      /* GPU Promotion for smoother car movement */
+      .custom-car-marker {
+        will-change: transform;
+      }
+      
+      /* Smooth transitions override */
+      .leaflet-fade-anim .leaflet-tile,
+      .leaflet-zoom-anim .leaflet-zoom-animated {
+          will-change: auto !important;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "leaflet/": "https://aistudiocdn.com/leaflet@^1.9.4/",
+    "leaflet": "https://aistudiocdn.com/leaflet@^1.9.4"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
